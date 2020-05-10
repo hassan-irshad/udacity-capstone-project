@@ -20,4 +20,8 @@ export async function createCatalogue(
       ...createCatalogueRequest
     })
   }
+
+  export async function getCatlogues() {
+    return await catalogueAccess.getAllCatalogues('abc')
+  }
   

@@ -34,6 +34,20 @@ functions:
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CATALOGUE_TABLE}
 
+  GetCatalogues:
+    handler: src/lambda/http/getCatalogues.handler
+    events:
+      - http:
+          method: get
+          path: getCatalogues
+          cors: true
+    iamRoleStatementsName: ${self:service.name}-getCatalogue-role-${self:provider.stage}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CATALOGUE_TABLE}
+
 resources:
   Resources:
     CatalogueDynamoDBTable:

@@ -21,6 +21,19 @@ export class CatalogueAccess {
 
         return todo;
     }
+
+    async getAllCatalogues(userId: string): Promise<CatalogueItem[]> {
+        const result = await this.docClient.query({
+            TableName: this.catalogueTable,
+            KeyConditionExpression: 'userId = :h',
+            ExpressionAttributeValues: {
+                ':h': userId
+            }
+        }).promise()
+
+        const items = result.Items
+        return items as CatalogueItem[]
+    }
 }
 
 function createDynamoDBClient() {
