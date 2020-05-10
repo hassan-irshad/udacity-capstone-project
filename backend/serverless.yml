@@ -1,0 +1,57 @@
+service:
+  name: photos-catalogue-app
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  apiGateway:
+    minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    CATALOGUE_TABLE: Catalogue-${self:provider.stage}
+  
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+
+functions:
+  CreateCatalogue:
+    handler: src/lambda/http/createCatalogue.handler
+    events:
+      - http:
+          method: post
+          path: createCatalogue
+          cors: true
+    iamRoleStatementsName: ${self:service.name}-createCatalogue-role-${self:provider.stage}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CATALOGUE_TABLE}
+
+resources:
+  Resources:
+    CatalogueDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: catalogueId
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: catalogueId
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.CATALOGUE_TABLE}
+
+plugins:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
