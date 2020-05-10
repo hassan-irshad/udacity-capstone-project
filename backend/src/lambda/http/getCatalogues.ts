@@ -3,7 +3,7 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 
 import { createLogger } from '../../utils/logger'
-import { getCatlogues } from '../../businessLogic/catalogue'
+import { getCatalogues } from '../../businessLogic/catalogue'
 
 const logger = createLogger('createCatalogue')
 
@@ -13,9 +13,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
   logger.info('Getting Catalogues')
 
-  const catalogues = await getCatlogues()
+  const catalogues = await getCatalogues()
 
-  return {
+  return { 
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Origin': '*'

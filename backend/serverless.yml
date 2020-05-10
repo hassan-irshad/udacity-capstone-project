@@ -48,6 +48,21 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CATALOGUE_TABLE}
 
+  DeleteCatalogue:
+    handler: src/lambda/http/deleteCatalogue.handler
+    events: 
+      - http:
+          method: delete
+          path: DeleteCatalogue
+          cors: true
+    iamRoleStatementsName: ${self:service.name}-deleteCatalogue-role-${self:provider.stage}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem 
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CATALOGUE_TABLE}
+        
 resources:
   Resources:
     CatalogueDynamoDBTable:

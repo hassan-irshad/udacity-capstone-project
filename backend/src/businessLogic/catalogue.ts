@@ -21,7 +21,14 @@ export async function createCatalogue(
     })
   }
 
-  export async function getCatlogues() {
+  export async function getCatalogues() {
     return await catalogueAccess.getAllCatalogues('abc')
   }
+
+  export async function deleteCatalogue(catalogueId: string) {
+    return await catalogueAccess.deleteCatalogue(catalogueId, 'abc')
+  }
   
+  export async function catalogueExist(catalogueId: string) {
+    return await catalogueAccess.catalogueExists(catalogueId, 'abc')
+  }

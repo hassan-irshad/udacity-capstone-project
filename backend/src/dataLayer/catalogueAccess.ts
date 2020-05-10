@@ -34,6 +34,30 @@ export class CatalogueAccess {
         const items = result.Items
         return items as CatalogueItem[]
     }
+
+    async deleteCatalogue(catalogueId: string, userId: string) {
+        await this.docClient.delete({
+            TableName: this.catalogueTable,
+            Key: {
+                userId,
+                catalogueId
+            },
+        }).promise()
+    }
+
+    async catalogueExists(catalogueId: string, userId: string) {
+        const result = await this.docClient
+            .get({
+                TableName: this.catalogueTable,
+                Key: {
+                    userId,
+                    catalogueId
+                }
+            })
+            .promise()
+
+        return !!result.Item
+    }
 }
 
 function createDynamoDBClient() {
