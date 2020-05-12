@@ -4,54 +4,54 @@ import * as AWSXRay from 'aws-xray-sdk'
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
-import { CatalogueItem } from '../models/CatalogueItem'
+import { ImageItem } from '../models/ImageItem'
 
-export class CatalogueAccess {
+export class ImageAccess {
 
     constructor(
         private readonly docClient: DocumentClient = createDynamoDBClient(),
-        private readonly catalogueTable = process.env.CATALOGUE_TABLE,
+        private readonly imageTable = process.env.IMAGES_TABLE,
     ) {}
 
-    async createCatalogue(catalogue: CatalogueItem): Promise<CatalogueItem> {
+    async createImage(image: ImageItem): Promise<ImageItem> {
         await this.docClient.put({
-            TableName: this.catalogueTable,
-            Item: catalogue
+            TableName: this.imageTable,
+            Item: image
         }).promise()
 
-        return catalogue;
+        return image;
     }
 
-    async getAllCatalogues(userId: string): Promise<CatalogueItem[]> {
+    async getAllImages(catalogueId: string): Promise<ImageItem[]> {
         const result = await this.docClient.query({
-            TableName: this.catalogueTable,
-            KeyConditionExpression: 'userId = :h',
+            TableName: this.imageTable,
+            KeyConditionExpression: 'catalogueId = :h',
             ExpressionAttributeValues: {
-                ':h': userId
+                ':h': catalogueId
             }
         }).promise()
 
         const items = result.Items
-        return items as CatalogueItem[]
+        return items as ImageItem[]
     }
 
-    async deleteCatalogue(catalogueId: string, userId: string) {
+    async deleteImage(imageId: string, catalogueId: string) {
         await this.docClient.delete({
-            TableName: this.catalogueTable,
+            TableName: this.imageTable,
             Key: {
-                userId,
+                imageId,
                 catalogueId
             },
         }).promise()
     }
 
-    async catalogueExists(catalogueId: string, userId: string) {
+    async imageExists(imageId: string, catalogueId: string) {
         const result = await this.docClient
             .get({
-                TableName: this.catalogueTable,
+                TableName: this.imageTable,
                 Key: {
-                    userId,
-                    catalogueId
+                    catalogueId,
+                    imageId
                 }
             })
             .promise()
