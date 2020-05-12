@@ -13,7 +13,8 @@ const useStyles = makeStyles((theme) => ({
       textAlign: "left"
     },
     appBar: {
-      backgroundColor: '#00acea'
+    //   backgroundColor: '#00acea'
+    backgroundColor: '#fa9746'
     }
   }));
   
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
             <Typography variant="h6" className={classes.title}>
               Photos Catalogue
             </Typography>
-            <Button color="inherit">Login</Button>
+            <Button color="inherit">Logout</Button>
           </Toolbar>
         </AppBar>
       </div>
