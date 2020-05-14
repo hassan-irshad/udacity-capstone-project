@@ -3,6 +3,10 @@ import { Container, Grid, Typography, Button } from '@material-ui/core'
 
 
 export default class Login extends React.Component {
+    handleLogin = () => {
+        this.props.auth.login()
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -16,7 +20,7 @@ export default class Login extends React.Component {
                                 Welcome to digital gallery!<br></br>
                                 Login to continue
                             </Typography>
-                            <Button variant="contained" style={{ backgroundColor: '#fa9746', color: 'white' }}>Login</Button>
+                            <Button onClick={this.handleLogin} variant="contained" style={{ backgroundColor: '#fa9746', color: 'white' }}>Login</Button>
                         </Grid>
                     </Grid>
                 </Container>

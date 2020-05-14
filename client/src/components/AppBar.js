@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
   
-  export default function NavBar() {
+  export default function NavBar({ logout }) {
     const classes = useStyles();
   
     return (
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
             <Typography variant="h6" className={classes.title}>
               Photos Catalogue
             </Typography>
-            <Button color="inherit">Logout</Button>
+            <Button onClick={logout} color="inherit">Logout</Button>
           </Toolbar>
         </AppBar>
       </div>

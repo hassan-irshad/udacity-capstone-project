@@ -5,10 +5,14 @@ import CatalogueCard from './CatalogueCard'
 
 class Home extends React.Component {
 
+    componentDidMount() {
+        console.log('this', this.props.auth)
+    }
+
     render() {
         return (
             <React.Fragment>
-                <NavBar />
+                <NavBar logout={this.props.auth.logout}/>
                 <Container>
                 <Grid container justify="center" alignItems="center" direction="row" spacing={2}>
                     <Grid item xs={12}>
