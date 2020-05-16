@@ -16,6 +16,8 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     CATALOGUE_TABLE: Catalogue-${self:provider.stage}
     AUTH_0_SECRET: A9p7GzOkccWoKdRWDWhCpqFL7eIncgCw5hi-dsbkEcL6PHAi9AYhSJonfXIJzt_n
+    IMAGES_S3_BUCKET: catalogueApp-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
   
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
@@ -67,6 +69,27 @@ functions:
           - dynamodb:DeleteItem
           - dynamodb:GetItem 
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CATALOGUE_TABLE}
+
+  GenerateUploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
+    events:
+      - http:
+          method: post
+          path: todos/{catalogueId}/attachment
+          cors: true
+          authorizer: Auth
+    iamRoleStatementsName: ${self:service.name}-generateUploadUrl-role-${self:provider.stage}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CATALOGUE_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+          - s3:GetObject
+        Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
 
         
 resources:

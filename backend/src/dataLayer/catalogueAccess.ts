@@ -58,6 +58,22 @@ export class CatalogueAccess {
 
         return !!result.Item
     }
+
+    async saveImageUrl(userId: string, catalogueId: string, imageUrl: string) {
+
+        await this.docClient.update({
+            TableName: this.catalogueTable,
+            Key: {
+                userId,
+                catalogueId
+            },
+            UpdateExpression: "set attachmentUrl = :a",
+            ExpressionAttributeValues: {
+                ":a": imageUrl
+            },
+            ReturnValues: "UPDATED_NEW"
+        }).promise()
+    }
 }
 
 function createDynamoDBClient() {

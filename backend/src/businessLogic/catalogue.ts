@@ -7,6 +7,7 @@ import { parseUserId } from '../auth/utils'
 import * as uuid from 'uuid'
 
 const catalogueAccess = new CatalogueAccess()
+const bucketName = process.env.IMAGES_S3_BUCKET
 
 export async function createCatalogue(
     createCatalogueRequest: CreateCatalogueRequest,
@@ -38,3 +39,9 @@ export async function createCatalogue(
     const userId = parseUserId(jwtToken)
     return await catalogueAccess.catalogueExists(catalogueId, userId)
   }
+
+  export async function saveImageUrl(catalogueId: string, imageId: string, jwtToken) {
+    const userId = parseUserId(jwtToken)
+    const imageUrl = `https://${bucketName}.s3.amazonaws.com/${imageId}`
+    return await catalogueAccess.saveImageUrl(userId, catalogueId, imageUrl)
+}
