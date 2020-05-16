@@ -3,6 +3,7 @@ import { Route, Switch, Router } from 'react-router-dom'
 import './App.css';
 import Home from './components/Home'
 import Login from './components/Login'
+import CreateCatalogue from './components/CreateCatalogue'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -31,6 +32,14 @@ export default class App extends React.Component {
           exact
           render={props => {
             return <Home {...props} auth={this.props.auth} />
+          }}
+        />
+
+        <Route
+          path="/createCatalogue"
+          exact
+          render={props => {
+            return <CreateCatalogue {...props} auth={this.props.auth} />
           }}
         />
       </Switch>

@@ -11,11 +11,12 @@ const logger = createLogger('createCatalogue')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const newCatalogue: CreateCatalogueRequest = JSON.parse(event.body)
-//   const jwtToken = event.headers.Authorization.split(' ')[1]
+  console.log('Token', event.headers.Authorization)
+  const jwtToken = event.headers.Authorization.split(' ')[1]
 
   logger.info('Creating new Catalogue')
 
-  const catalogue = await createCatalogue(newCatalogue)
+  const catalogue = await createCatalogue(newCatalogue, jwtToken)
   
   logger.info('Catalogue created')
 

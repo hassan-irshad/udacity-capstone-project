@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
 function Callback() {
     const classes = useStyles();
     return (
-        <Backdrop open="open" className={classes.backdrop}>
+        <Backdrop open={true} className={classes.backdrop}>
             <CircularProgress color="inherit" />
         </Backdrop>
     )

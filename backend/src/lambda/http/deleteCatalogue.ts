@@ -8,7 +8,7 @@ import { catalogueExist, deleteCatalogue } from '../../businessLogic/catalogue'
 const logger = createLogger('createCatalogue')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    //   const jwtToken = event.headers.Authorization.split(' ')[1]
+    const jwtToken = event.headers.Authorization.split(' ')[1]
     const catalogueId = event.pathParameters.catalogueId
 
     logger.info('Checking if id exist')
@@ -26,7 +26,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         }
     }
 
-    const validId = await catalogueExist(catalogueId)
+    const validId = await catalogueExist(catalogueId, jwtToken)
 
     if (!validId) {
         logger.info('Catalogue not exist')
@@ -43,7 +43,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     logger.info('Deleting Catalogue')
 
-    await deleteCatalogue(catalogueId)
+    await deleteCatalogue(catalogueId, jwtToken)
 
     return {
         statusCode: 201,

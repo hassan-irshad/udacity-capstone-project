@@ -15,19 +15,23 @@ provider:
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     CATALOGUE_TABLE: Catalogue-${self:provider.stage}
-    IMAGES_TABLE: Catalogue-Images-${self:provider.stage}
+    AUTH_0_SECRET: A9p7GzOkccWoKdRWDWhCpqFL7eIncgCw5hi-dsbkEcL6PHAi9AYhSJonfXIJzt_n
   
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
 
 functions:
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
+
   CreateCatalogue:
     handler: src/lambda/http/createCatalogue.handler
     events:
       - http:
           method: post
-          path: createCatalogue
+          path: catalogue
           cors: true
+          authorizer: Auth
     iamRoleStatementsName: ${self:service.name}-createCatalogue-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
@@ -40,7 +44,7 @@ functions:
     events:
       - http:
           method: get
-          path: getCatalogues
+          path: catalogue
           cors: true
     iamRoleStatementsName: ${self:service.name}-getCatalogue-role-${self:provider.stage}
     iamRoleStatements:
@@ -54,7 +58,7 @@ functions:
     events: 
       - http:
           method: delete
-          path: DeleteCatalogue
+          path: catalogue/{catalogueId}
           cors: true
     iamRoleStatementsName: ${self:service.name}-deleteCatalogue-role-${self:provider.stage}
     iamRoleStatements:
@@ -64,19 +68,6 @@ functions:
           - dynamodb:GetItem 
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CATALOGUE_TABLE}
 
-  CreateImage:
-    handler: src/lambda/http/createImage.handler
-    events:
-      - http:
-          method: post
-          path: createImage
-          cors: true
-    iamRoleStatementsName: ${self:service.name}-createCatalogueImage-role-${self:provider.stage}
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:PutItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.IMAGES_TABLE}
         
 resources:
   Resources:
@@ -96,21 +87,6 @@ resources:
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.CATALOGUE_TABLE}
     
-    CatalogueImagesDynamoDBTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: imageId
-            AttributeType: S
-          - AttributeName: catalogueId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: catalogueId
-            KeyType: HASH
-          - AttributeName: imageId
-            KeyType: RANGE
-        BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.IMAGES_TABLE}
 
 plugins:
   - serverless-webpack

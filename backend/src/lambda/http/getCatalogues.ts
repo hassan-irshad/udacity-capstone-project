@@ -9,11 +9,11 @@ const logger = createLogger('createCatalogue')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   console.log('Processign Event: ', event);
-//   const jwtToken = event.headers.Authorization.split(' ')[1]
+  const jwtToken = event.headers.Authorization.split(' ')[1]
 
   logger.info('Getting Catalogues')
 
-  const catalogues = await getCatalogues()
+  const catalogues = await getCatalogues(jwtToken)
 
   return { 
     statusCode: 200,

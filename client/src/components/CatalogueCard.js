@@ -15,15 +15,15 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-  export default function CatalogueCard() {
+  export default function CatalogueCard({ item, remove }) {
     const classes = useStyles();
 
     return (
         <Card className={classes.root}>
           <CardActionArea>
             <CardHeader 
-             title="Photo"
-             subheader="September 13, 2016"
+             title={item.name}
+             subheader={new Date(item.createdAt).toDateString()}
             />
             <CardMedia 
              className={classes.media}
@@ -31,13 +31,12 @@ const useStyles = makeStyles((theme) => ({
             />
             <CardContent>
              <Typography variant="body2" color="textSecondary" component="p">
-               This impressive paella is a perfect party dish and a fun meal to cook together with your
-               guests. Add 1 cup of frozen peas along with the mussels, if you like.
+               {item.description}
              </Typography>
             </CardContent>
           </CardActionArea>
           <CardActions className={classes.buttons}>
-            <Button size="small" color="primary">
+            <Button size="small" color="primary" onClick={() => {remove(item.catalogueId)}}>
                 Delete
             </Button>
         </CardActions>

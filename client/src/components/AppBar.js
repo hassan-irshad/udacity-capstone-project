@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, AppBar, Toolbar, Typography, makeStyles } from '@material-ui/core'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
             <Typography variant="h6" className={classes.title}>
               Photos Catalogue
             </Typography>
+            <Link to={'/createCatalogue'}><Button variant="contained" color="primary">Create</Button></Link>
             <Button onClick={logout} color="inherit">Logout</Button>
           </Toolbar>
         </AppBar>
