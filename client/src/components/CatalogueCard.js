@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-  export default function CatalogueCard({ item, remove }) {
+  export default function CatalogueCard({ item, remove, edit }) {
     const classes = useStyles();
 
     return (
@@ -25,10 +25,18 @@ const useStyles = makeStyles((theme) => ({
              title={item.name}
              subheader={new Date(item.createdAt).toDateString()}
             />
-            <CardMedia 
+            {item.attachmentUrl ? (
+              <CardMedia 
+              className={classes.media}
+              image={item.attachmentUrl}
+             />
+            ) : (
+              <CardMedia 
              className={classes.media}
              image={require('../assets/multimedia.png')}
             />
+            )}
+            
             <CardContent>
              <Typography variant="body2" color="textSecondary" component="p">
                {item.description}
@@ -38,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
           <CardActions className={classes.buttons}>
             <Button size="small" color="primary" onClick={() => {remove(item.catalogueId)}}>
                 Delete
+            </Button>
+            <Button size="small" color="primary" onClick={() => {edit(item.catalogueId)}}>
+                Edit
             </Button>
         </CardActions>
         </Card>

@@ -4,6 +4,7 @@ import './App.css';
 import Home from './components/Home'
 import Login from './components/Login'
 import CreateCatalogue from './components/CreateCatalogue'
+import EditCatalogue from './components/EditCatalogue'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -40,6 +41,14 @@ export default class App extends React.Component {
           exact
           render={props => {
             return <CreateCatalogue {...props} auth={this.props.auth} />
+          }}
+        />
+
+        <Route
+          path="/catalogue/:catalogueId/edit"
+          exact
+          render={props => {
+            return <EditCatalogue {...props} auth={this.props.auth} />
           }}
         />
       </Switch>

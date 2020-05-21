@@ -16,7 +16,7 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     CATALOGUE_TABLE: Catalogue-${self:provider.stage}
     AUTH_0_SECRET: A9p7GzOkccWoKdRWDWhCpqFL7eIncgCw5hi-dsbkEcL6PHAi9AYhSJonfXIJzt_n
-    IMAGES_S3_BUCKET: catalogueApp-${self:provider.stage}
+    IMAGES_S3_BUCKET: catalogue-app-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
   
   stage: ${opt:stage, 'dev'}
@@ -75,7 +75,7 @@ functions:
     events:
       - http:
           method: post
-          path: todos/{catalogueId}/attachment
+          path: catalogue/{catalogueId}/attachment
           cors: true
           authorizer: Auth
     iamRoleStatementsName: ${self:service.name}-generateUploadUrl-role-${self:provider.stage}
@@ -109,6 +109,39 @@ resources:
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.CATALOGUE_TABLE}
+    
+    AttachmentsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.IMAGES_S3_BUCKET}
+        CorsConfiguration:
+          CorsRules:
+            -
+              AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        PolicyDocument:
+          Id: MyPolicy
+          Version: "2012-10-17"
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:GetObject'
+              Resource: 'arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*'
+        Bucket: !Ref AttachmentsBucket
     
 
 plugins:

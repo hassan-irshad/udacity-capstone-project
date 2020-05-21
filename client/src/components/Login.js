@@ -1,8 +1,14 @@
 import React from 'react'
 import { Container, Grid, Typography, Button } from '@material-ui/core'
+import { test } from '../api/catalogues-api'
 
 
 export default class Login extends React.Component {
+
+    async componentDidMount() {
+        await test()
+    }
+
     handleLogin = () => {
         this.props.auth.login()
     }

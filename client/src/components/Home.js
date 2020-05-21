@@ -36,6 +36,10 @@ class Home extends React.Component {
         await this.fetchCatalogues()
     }
 
+    onEditButtonClick = (catalogueId) => {
+        this.props.history.push(`/catalogue/${catalogueId}/edit`)
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -76,7 +80,7 @@ class Home extends React.Component {
             this.state.catalogues.map((item) => {
                 return (
                     <Grid  item sm={6} md={3} xs={12} key={item.catalogueId}>
-                      <CatalogueCard item={item} remove={this.deleteCatalogue}/>
+                      <CatalogueCard item={item} remove={this.deleteCatalogue} edit={this.onEditButtonClick}/>
                     </Grid>
                 )
             })

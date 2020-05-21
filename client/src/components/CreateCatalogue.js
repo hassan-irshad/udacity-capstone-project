@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from './AppBar'
 import { Container, Grid, TextField, Button, Typography, CircularProgress } from '@material-ui/core'
 import { createCatalogue } from '../api/catalogues-api'
+import '../css/CreateCatalogue.css'
 
 export default class CreateCatalogue extends React.Component {
     state = {
@@ -44,25 +45,19 @@ export default class CreateCatalogue extends React.Component {
         return (
             <React.Fragment>
               <Navbar logout={this.props.auth.logout} />
-              <Container>
-                <Grid container justify="center" alignItems="flex-start" direction="column">
-                  <Grid item xs={12}>
-                    <Typography variant="h3" gutterBottom>
-                      Create Catalogue
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField id="Name" label="Name" onChange={this.handleNameChange} />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField id="Description" label="Description" onChange={this.handleDescriptionChange} />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Button variant="contained" color="primary" onClick={this.submit}>Submit</Button>
-                    {this.renderLoading()}
-                  </Grid> 
-                </Grid>
-              </Container>
+              <Container maxWidth="xs">
+              <div className="paper">
+                <Typography variant="h3" gutterBottom>
+                  Create Catalogue
+                </Typography>
+                <form className="form">
+                  <TextField className="field" variant="outlined" fullWidth id="Name" label="Name" onChange={this.handleNameChange} />
+                  <TextField className="field" variant="outlined" fullWidth id="Description" label="Description" onChange={this.handleDescriptionChange} />
+                  <Button className="field" variant="contained" color="primary" onClick={this.submit}>Submit</Button>
+                </form>
+                {this.renderLoading()}
+               </div>
+                </Container>
             </React.Fragment>
         )
     }
