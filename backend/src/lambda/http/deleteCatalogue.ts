@@ -5,7 +5,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } f
 import { createLogger } from '../../utils/logger'
 import { catalogueExist, deleteCatalogue } from '../../businessLogic/catalogue'
 
-const logger = createLogger('createCatalogue')
+const logger = createLogger('deleteCatalogue')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const jwtToken = event.headers.Authorization.split(' ')[1]

@@ -5,6 +5,9 @@ import * as uuid from 'uuid'
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 
 const XAWS = AWSXRay.captureAWS(AWS)
+import { createLogger } from '../../utils/logger'
+
+const logger = createLogger('GenerateUrlCatalogue')
 
 import { saveImageUrl, catalogueExist } from '../../businessLogic/catalogue'
 
@@ -19,6 +22,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const catalogueId = event.pathParameters.catalogueId
     const jwtToken = event.headers.Authorization.split(' ')[1]
 
+    logger.info('Checking if id exist')
+
     const validCatalogueId = await catalogueExist(catalogueId, jwtToken)
 
     if (!validCatalogueId) {
@@ -32,6 +37,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
             })
         }
     }
+
+    logger.info('Getting URL')
 
     const imageId = uuid.v4()
     const url = getUploadUrl(imageId)

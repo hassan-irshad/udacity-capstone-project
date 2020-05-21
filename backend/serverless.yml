@@ -5,9 +5,31 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: PhotosCatalogue API
+        description: Serverless application for photos catalogue app
+    models:
+      - name: CatalogueRequest
+        contentType: application/json
+        schema: ${file(models/create-catalogue-request.json)}
+  
 
 
 provider:
+  tracing:
+    lambda: true
+    apiGateway: true
+    iamRoleStatements:             
+      - Effect: 'Allow'           
+        Action:
+          - 'xray:PutTraceSegments'       
+          - 'xray:PutTelemetryRecords'
+        Resource:
+          - '*'
+
   name: aws
   runtime: nodejs12.x
   apiGateway:
@@ -34,6 +56,12 @@ functions:
           path: catalogue
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new Catalogue
+            description: Create a new Catalogue
+            requestModels:
+              'application/json': CatalogueRequest
     iamRoleStatementsName: ${self:service.name}-createCatalogue-role-${self:provider.stage}
     iamRoleStatements:
       - Effect: Allow
@@ -94,6 +122,26 @@ functions:
         
 resources:
   Resources:
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: 'request-body-validator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
+
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'  
+
     CatalogueDynamoDBTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -147,3 +195,6 @@ resources:
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
+  - serverless-plugin-tracing
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation

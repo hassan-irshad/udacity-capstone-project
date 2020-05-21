@@ -38,7 +38,6 @@ export default class CreateCatalogue extends React.Component {
       }
       await createCatalogue(token, newCatalogue)
       this.props.history.push(`/`)
-      console.log('state', this.state)
     }
     
     render() {
@@ -63,7 +62,6 @@ export default class CreateCatalogue extends React.Component {
     }
 
     renderLoading() {
-        console.log('loading')
         if (this.state.submitLoading) {
           return (
             <CircularProgress color="secondary" />

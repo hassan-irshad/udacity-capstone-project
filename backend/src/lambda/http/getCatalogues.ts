@@ -5,7 +5,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } f
 import { createLogger } from '../../utils/logger'
 import { getCatalogues } from '../../businessLogic/catalogue'
 
-const logger = createLogger('createCatalogue')
+const logger = createLogger('getCatalogue')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   console.log('Processign Event: ', event);
