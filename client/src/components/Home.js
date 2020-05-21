@@ -64,6 +64,14 @@ class Home extends React.Component {
             return this.renderLoading()
         }
 
+        if (this.state.catalogues.length === 0) {
+            return (
+                <Grid>
+                  <h4>You have no catalogues yet.</h4>
+                </Grid>
+            )
+        }
+
         return this.renderCatalogueList()
     }
 
